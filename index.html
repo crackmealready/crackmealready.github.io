@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<style type="text/css">
+textarea {
+  width:100%;
+}
+
+#template {
+  height:40%
+}
+#words {
+  height:20%
+}
+#result {
+  height:40%
+}
+</style>
+</head>
+<script src="bower_components/kuromoji/build/kuromoji.js"></script>
+<script>
+
+function strgen(template, target, words, callback){
+    kuromoji.builder({ dicPath: "bower_components/kuromoji/dict/" }).build(function (err, tokenizer) {
+        // tokenizer is ready
+        // var path = tokenizer.tokenize("すもももももももものうち");
+        var path = tokenizer.tokenize(template);
+        // console.log(path);
+        result = ""
+        for(var i = 0, l = path.length; i < l; i++){
+            var rand = Math.random()*100|0
+            switch(path[i]['pos']){
+                case "名詞":
+                    if(rand < 20)
+                        result += words[Math.random()*words.length|0]
+                    else if(rand < 25)
+                        result += target
+                    else
+                        result += path[i]['surface_form']
+                    break;
+                case "形容詞":
+                case "動詞":
+                    if(rand < 10)
+                        result += words[Math.random()*words.length|0]
+                    else
+                        result += path[i]['surface_form']
+
+                    break;
+                default:
+                    result += path[i]['surface_form']
+            }
+        }
+        callback(result)
+    });
+}
+window.onload=function(){
+    write()
+}
+
+function write(){
+    var template = document.getElementById("template"),
+        target   = document.getElementById("target"),
+        words    = document.getElementById("words"),
+        result   = document.getElementById("result")
+    strgen(template.value, target.value, words.value.split("\n"), function(str){
+        result.value = str
+        console.log(str)
+    })
+}
+</script>
+<div>テンプレート</div>
+<textarea id="template">
+高齢者に高額の解約金を支払わせていたとして問題になっているパソコン量販チェーン「PCデポ」で、今度は神奈川県内の店舗の店員らが客のクレジットカードを不正利用して買い物をしていたと、アルバイトを名乗る人物が2年前に暴露したツイッター投稿が発掘されている。ネット上では真偽不明の被害告白も相次いでいるが、PCデポ側は、ホームページ上でコメントを発表し、「確認できませんでした」と回答している。
+アルバイトを名乗る人物は、2014年1月にツイッターのアカウントを開設すると、この月の6日に次々と内部告発のような投稿を行った。
+
+ツイートによると、この人物は、神奈川県内の店舗（ツイッターでは実名）のアルバイトで、高齢者中心のサービスの加入受け付けを担当していたらしい。客からカードを預かると、まず客の目に届かない場所まで行く。そこで、カード情報をパソコンで入力し、登録画面をキャプチャーしてクラウドサービス「Dropbox」上に保存する。
+
+そして、不正利用するときは、客のカード情報を手入力してネット上で買い物をすると明かした。カードの決済はされるものの連絡が取れない客の情報は、数千件にも及ぶという。
+
+さらに、同様な不正利用をしている店員はほかに、登録担当の2人がいるとして、この人物は、「こんな事何年もやってる。すごいな」と漏らしている。その後も、2月2日に若い女性客の顔の画像までアップして、「易々とクレカを渡す鴨」とつぶやいたり、3月8日には、「当事者の二人は今日も口八丁の契約をさせています」と書いたりしていた。ツイートは、2014年のこの日が最後になっているが、アカウントは2年以上たった16年8月18日夕現在も残ったままだ。
+
+ネット上で、これらのツイートが話題になると、真偽は分からないが、PCデポから身に覚えのないカード料金の引き落としがあったとする書き込みが次々に見つかり、騒ぎになっている。
+</textarea>
+
+<div>対象人物(1人)</div>
+<input id="target" value="唐澤貴洋" >
+<!--textarea id="target">唐澤貴洋</textarea-->
+<div>汚染語(改行)</div>
+<textarea id="words">有能
+うんこ漏らさない
+依頼人裏切らない
+裁判ちゃんとくる</textarea>
+<div>結果</div>
+<textarea id="result"></textarea>
+<button onclick="write();return false" type="button">go</button>
+</html>
