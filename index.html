@@ -77,22 +77,20 @@ function strgen(template, target, words, callback){
         callback(result)
     });
 }
+var modal
 window.onload=function(){
-    var modal = document.getElementById('myModal');
-    modal.style.display = "block";
+    modal = document.getElementById('myModal');
     write();
-    modal.style.display = "none";
 
     document.getElementById("go").onclick = function(){
-        modal.style.display = "block";
         write();
-        modal.style.display = "none";
     }
 }
 
 
 
 function write(){
+    modal.style.display = "block";
     var template = document.getElementById("template"),
         target   = document.getElementById("target"),
         words    = document.getElementById("words"),
@@ -100,6 +98,7 @@ function write(){
     strgen(template.value, target.value, words.value.split("\n"), function(str){
         result.value = str
         console.log(str)
+        modal.style.display = "none";
     })
 }
 </script>
